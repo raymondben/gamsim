@@ -1,0 +1,12 @@
+Package: gamsim
+Title: Simulate From Fitted GAM Object
+Version: 0.0.1
+Authors@R: person("Ben", "Raymond", email = "ben@theraymonds.org", role = c("aut", "cre"))
+Description: Draw samples from a fitted GAM object.
+Imports:
+    assertthat,
+    mgcv
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1

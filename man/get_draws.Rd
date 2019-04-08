@@ -13,27 +13,39 @@ get_draws(object, N, newdata, enforce = "none")
 
 \item{newdata}{data.frame: a data frame giving the predictor variables from which to simulate}
 
-\item{enforce}{string: enforce sample curves to be "decreasing", "increasing", or "none" for neither}
+\item{enforce}{string: enforce sample curves to be "decreasing", "increasing", "nondecreasing", "nonincreasing", or "none" for neither}
 }
 \value{
 numeric matrix with N cols and as many rows as newdata
 }
 \description{
-Draw samples from a fitted GAM model
+Note well: the "enforce" behaviour is thoroughly experimental. The constraint (decreasing/increasing/etc) is evaluated on the sampled output, so for this to make any sort of sense you need to provide \code{newdata} appropriately.
 }
 \examples{
-x <- data.frame(t=seq(0, pi/2, length.out=101))
+x <- data.frame(t = seq(0, pi/2, length.out = 101))
 x$y <- sin(x$t)*25 + 5*rnorm(101)
 
 library(mgcv)
 
 ## fit GAM
-fit <- gam(y~s(t), data=x)
+fit <- gam(y ~ s(t), data = x)
 
 ## simulations from fitted object
-draws <- get_draws(fit, N=5, newdata=x)
+draws <- get_draws(fit, N = 5, newdata = x)
 
-plot(x$t, draws[,1], type="l")
+plot(x$t, draws[, 1], type = "l")
 for (k in 2:5) lines(x$t, draws[, k])
+
+\dontrun{
+  ## with constraint to be monotone increasing
+  library(scam)
+  fit <- scam(y ~ s(t, bs = "mpi"), data = x)
+
+  ## simulations from fitted object
+  draws <- get_draws(fit, N = 5, newdata = x, enforce = "increasing")
+
+  plot(x$t, draws[, 1], type = "l")
+  for (k in 2:5) lines(x$t, draws[, k])
+}
 
 }
